@@ -86,9 +86,20 @@ exampass-deepseek/
 ├── extractor.py         # PPTX/DOCX/PDF 文本提取
 ├── template_engine.py   # HTML 模板引擎（CSS + JS 模板）
 ├── requirements.txt     # Python 依赖
+├── HERMES_SKILL.md      # 在 Hermes Agent 中作为 SKILL 使用
 ├── LICENSE
 └── README.md
 ```
+
+## Hermes Agent 用户
+
+如果你在用 [Hermes Agent](https://hermes-agent.nousresearch.com/)，还可以直接把此功能作为 SKILL 加载，无需 DeepSeek API key：
+
+```
+/skill exampass-assistant
+```
+
+详见 [HERMES_SKILL.md](HERMES_SKILL.md)。
 
 ## 技术依赖
 
