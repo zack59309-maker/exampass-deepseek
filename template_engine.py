@@ -211,8 +211,18 @@ __EXTRA_JS__
 </html>"""
 
 MATHJAX_CONFIG = """<script>
-MathJax = {
-  tex: { inlineMath: [['$', '$'], ['\\\\\\(', '\\\\\\)']], displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']] }
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\\\(', '\\\\)']],
+    displayMath: [['$$', '$$'], ['\\\\[', '\\\\]']],
+    processEscapes: true,
+    packages: {'[+]': ['noerrors']}
+  },
+  options: {
+    ignoreHtmlClass: 'no-mathjax',
+    processHtmlClass: 'mathjax'
+  },
+  loader: {load: ['[tex]/noerrors']}
 };
 </script>"""
 MATHJAX_SCRIPT = '<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"></script>'
@@ -275,7 +285,7 @@ def save_test(questions, output_path, title, duration_minutes=30):
     js = '<script>\n' + js + '\n</script>'
 
     sub_html = f'<p style="text-align:center;color:var(--ink-light);font-size:0.95em">建议用时：{duration_minutes} 分钟</p>'
-    body = '\\n'.join([
+    body = '\n'.join([
         '<h1>' + title + '</h1>',
         '<h2 style="text-align:center">章节测验</h2>',
         sub_html,

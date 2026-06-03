@@ -62,21 +62,44 @@ def call_deepseek(system_prompt, user_prompt, max_tokens=4096):
                 raise
 
 
+def _cleanup_latex(html_text):
+    """清理 AI 输出中常见的 LaTeX 格式问题。"""
+    # 1. 将 \(...\) 替换为 $...$
+    html_text = re.sub(r'\\\((.*?)\\\)', r'$\1$', html_text)
+    # 2. 将 \[...\] 替换为 $$...$$
+    html_text = re.sub(r'\\\[(.*?)\\\]', r'$$\1$$', html_text)
+    # 3. 去掉 LaTeX 命令中多余的空格: \frac{...} {..} -> \frac{...}{..}
+    html_text = re.sub(r'\\([a-zA-Z]+)\s*\{', r'\\\1{', html_text)
+    # 4. 修复常见的 HTML 实体转义
+    html_text = html_text.replace('&gt;', '>').replace('&lt;', '<')
+    # 5. 去掉空行中的多余空白
+    html_text = re.sub(r'\n\s*\n', '\n', html_text)
+    return html_text
+
+
 def generate_knowledge(text, title):
     """调用 DeepSeek 生成知识清单。"""
     system_prompt = """你是一位资深的大学课程辅导专家。请根据课程资料生成一份**期末考试复习知识清单**。
 
 ## 输出要求
-1. **核心知识点** — 定义、定理、公式、关键概念，公式用 $...$ LaTeX 格式
+1. **核心知识点** — 定义、定理、公式、关键概念
 2. **重点解题方法** — 解题步骤、技巧、常见陷阱
 3. **考试高频考点** — 用 ⭐ 标注重要程度（⭐了解 ⭐⭐掌握 ⭐⭐⭐必考）
+
+## LaTeX 公式规则（重要）
+- **必须**使用标准 LaTeX 语法：行内用 `$...$`，独立公式用 `$$...$$`
+- 不要在公式内使用中文或全角符号
+- 示例：`$f(x) = \int_{a}^{b} x^2 \, dx$`  ✅
+- 示例：`$$\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$$`  ✅
+- 不要使用 `\(...\)` 或 `\[...\]` 格式
+- 不要在 LaTeX 命令和花括号之间加多余空格
 
 ## 格式要求
 - 使用 <h2>、<h3> 标题，不要用 markdown
 - 表格用 <table><tr><th><td>
 - 重要内容用 <div class="important"> 包裹
 - 关键概念用 <strong> 加粗
-- 公式用 $...$ 行内，$$...$$ 独立行"""
+- 所有纯文本内容直接写，不要用 HTML 转义字符代替中文"""
 
     # 截断防止超长，使用普通字符串拼接避免 f-string 花括号冲突
     text_truncated = text[:8000] if len(text) > 8000 else text
@@ -87,6 +110,7 @@ def generate_knowledge(text, title):
 
     print("  → 调用 DeepSeek 生成知识清单...")
     result = call_deepseek(system_prompt, user_prompt, max_tokens=4096)
+    result = _cleanup_latex(result)
     return result
 
 
