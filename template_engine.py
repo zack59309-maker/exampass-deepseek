@@ -155,6 +155,9 @@ function gradeAll() {
     exp.classList.add('show');
   });
   document.getElementById('score-num').textContent = total + '/' + QUESTIONS.reduce((s,q) => s+q.points, 0);
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise();
+  }
 }
 
 function resetAll() {
@@ -177,7 +180,12 @@ function resetAll() {
   document.getElementById('score-num').textContent = '0';
 }
 
-window.onload = render;
+window.onload = function() {
+  render();
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise();
+  }
+};
 """
 
 TEST_LABELS = json.dumps({
