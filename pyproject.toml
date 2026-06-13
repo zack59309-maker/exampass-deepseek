@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "exampass-deepseek"
+version = "1.7.0"
+description = "把课件（PPT/Word/PDF）一键变成知识清单 + 交互式测验 HTML。DeepSeek 驱动版。"
+readme = "README.md"
+authors = [
+    {name = "zack59309-maker"}
+]
+license = {text = "CC BY-NC 4.0"}
+requires-python = ">=3.9"
+keywords = ["education", "exam", "courseware", "quiz", "study"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: Free for non-commercial use",
+    "Topic :: Education",
+]
+dependencies = [
+    "python-pptx",
+    "python-docx",
+    "pymupdf",
+    "Pillow",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/zack59309-maker/exampass-deepseek"
+"Bug Tracker" = "https://github.com/zack59309-maker/exampass-deepseek/issues"
